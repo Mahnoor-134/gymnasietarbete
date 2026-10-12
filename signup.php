@@ -1,23 +1,7 @@
 <?php
-include 'assets/config/db.php';
+require_once 'assets/functions.php';
 session_start();
 $error = false;
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Hash the password before storing it
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    // Prepare and execute the SQL statement to insert the new user
-    $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
-    $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':password', $hashedPassword);
-
-  
 
 if (isset($_POST['submit'])) {
     if (
@@ -29,7 +13,7 @@ if (isset($_POST['submit'])) {
         && ($_POST["name"] != "")
         && ($_POST["email"] != "")
         && ($_POST["password"] != "")
-    ) 
+    ) {
 
 
 
@@ -38,6 +22,7 @@ if (isset($_POST['submit'])) {
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         //$password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ;
         $password = $_POST['password'];
+        
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         $_POST = [
@@ -57,13 +42,10 @@ if (isset($_POST['submit'])) {
             header("Location: index.php");
         } else {
             $error = true;
-    
-}
-  if ($stmt->execute()) {
-        // Registration successful, redirect to login page or dashboard
-        header("Location: login.php");
-        exit();
+        }
     } else {
         $error = true;
     }
+}
+
 ?>
