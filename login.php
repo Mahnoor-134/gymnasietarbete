@@ -6,7 +6,7 @@ if (isset($_POST['submit'])) {
 
     $username = $_POST['username'];
     $password = $_POST['password'];
-
+ 
     if (login($username, $password)) {
         $_SESSION['username'] = $username;
         $_SESSION['password'] = $password;
@@ -37,7 +37,7 @@ if (isset($_POST['submit'])) {
 
         <input type="submit" name="submit" value="Login">
     </form>
-    
+
 
     
 
