@@ -27,18 +27,21 @@ function addUser($felt)
 function login($username, $password)
 {
     global $forum;
-    
+
     $sql = "SELECT * FROM user WHERE username = :username ";
 
     $stmt = $forum->prepare($sql);
-    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':username', $username, PDO::PARAM_STR);
     $stmt->execute();
-    try {
-        return $stmt->execute();
-    } catch (Exception $e) {
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user && password_verify($password, $user['password'])) {
+        return $user;
+    } else {
         return false;
     }
 }
+
 
 
 //ändra information om användaren
@@ -46,35 +49,34 @@ function editUser($felt)
 {
     global $forum;
 
-    if(!empty($felt['password'])){
+    if (!empty($felt['password'])) {
 
-   
-    $sql = "
+
+        $sql = "
     UPDATE user 
     SET name =:name,
         email=:email,
         password=COALESCE(:password, password)
          Where username=:username";
 
-    $stmt = $forum->prepare($sql);
+        $stmt = $forum->prepare($sql);
 
-    $stmt->bindValue(':name', $felt['name']);
-    $stmt->bindValue(':email', $felt['email']);
-    $stmt->bindValue(':password', $felt['password']);
-    $stmt->bindValue(':username', $felt['username']);
-  
-}else{
-     $sql = "
+        $stmt->bindValue(':name', $felt['name']);
+        $stmt->bindValue(':email', $felt['email']);
+        $stmt->bindValue(':password', $felt['password']);
+        $stmt->bindValue(':username', $felt['username']);
+    } else {
+        $sql = "
     UPDATE user 
     SET name =:name,
         email=:email
          Where username=:username";
 
-    $stmt = $forum->prepare($sql);
+        $stmt = $forum->prepare($sql);
 
-    $stmt->bindValue(':name', $felt['name']);
-    $stmt->bindValue(':email', $felt['email']);
-    $stmt->bindValue(':username', $felt['username']);
+        $stmt->bindValue(':name', $felt['name']);
+        $stmt->bindValue(':email', $felt['email']);
+        $stmt->bindValue(':username', $felt['username']);
     }
 
     return ($stmt->execute());
@@ -89,16 +91,14 @@ function getUser($username)
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
- 
-function SearchUser($username){
 
-   global $forum;
-   $sql = "SELECT * FROM forum WHERE username = :username ";
+function SearchUser($username)
+{
 
-   $stmt = $forum->prepare($sql);
-   $stmt->execute([':username' => $username]);
-   return $stmt;
+    global $forum;
+    $sql = "SELECT * FROM forum WHERE username = :username ";
 
+    $stmt = $forum->prepare($sql);
+    $stmt->execute([':username' => $username]);
+    return $stmt;
 }
-?>
-
