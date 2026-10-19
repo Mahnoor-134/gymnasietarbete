@@ -12,6 +12,7 @@
             <li><a href="index.php">Hem</a></li>
             <li><a href="profile.php">Profil</a></li>
             <li><a href="logout.php">Logga ut</a></li>
+            <li><a href="add_employee.php">add user</a></li>
         </ul>
     </nav>
     

@@ -22,11 +22,8 @@ require_once 'assets/config/db.php';
         <a href="logout.php">Logga ut</a>
     <?php else : ?>
         <a href="login.php">Logga in</a>
-        <a href="signup.php">Registrera dig</a>
-        <a href="personal.php">personal</a>
-      
-        <a href="personal/driver/index.php">Driver</a>
-        <a href="personal/ekonomi/index.php">Finance</a>
+       
+    
 
 
     <?php endif; ?>

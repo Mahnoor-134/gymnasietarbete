@@ -10,7 +10,7 @@ if (isset($_POST['submit'])) {
     if (login($username, $password)) {
         $_SESSION['username'] = $username;
         $_SESSION['password'] = $password;
-        header('Location: index.php');
+        header('Location: hemsidan.php');
         exit();
     } else {
         echo 'invalid username or password';
@@ -23,11 +23,11 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>log in</title>
+    <title>Log in</title>
 </head>
 <body>
     
-    <h1>Login</h1>
+    <h1>Log in</h1>
     <form method="POST" action="">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br><br>
@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br><br>
 
-        <input type="submit" name="submit" value="Login">
+        <input type="submit" name="submit" value="Log in">
     </form>
 
 
