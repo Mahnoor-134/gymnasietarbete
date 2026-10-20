@@ -18,10 +18,13 @@ require_once 'assets/config/db.php';
 
     <?php if (isset($_SESSION['username'])) : ?>
         <p>Hej, <?php echo $_SESSION['username']; ?>!</p>
-        <a href="profile.php">Profil</a>
+        
         <a href="logout.php">Logga ut</a>
     <?php else : ?>
-        <a href="login.php">Logga in</a>
+        <a href="logout.php">Log out</a>
+        
+        <a href="personal/admin/add_employee.php">Lägg till anställd</a>
+        <a href="personal/admin/edit_employee.php">Redigera anställd</a
        
     
 

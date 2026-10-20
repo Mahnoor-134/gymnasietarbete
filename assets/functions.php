@@ -11,7 +11,7 @@ function addUser($felt)
 
     $stmt = $taxi->prepare($sql);
 
-   // $hashedPassword = password_hash($felt['password'], PASSWORD_DEFAULT);
+    // $hashedPassword = password_hash($felt['password'], PASSWORD_DEFAULT);
 
     $stmt->bindValue(':username', $felt['username']);
     $stmt->bindValue(':name', $felt['name']);
@@ -86,7 +86,7 @@ function editUser($felt)
 
     return ($stmt->execute());
 }
-function getUser($username)
+/*function getUser($username)
 {
     global $taxi;
    // $sql = "SELECT * FROM users WHERE username = :username ";
@@ -97,6 +97,17 @@ function getUser($username)
     $stmt->execute();
   //  return $stmt->fetch(PDO::FETCH_ASSOC);
   return $stmt;
+}*/
+
+
+function getUsers()
+{
+     global $taxi;
+    $sql = "select * from users";
+   
+    $stmt = $taxi->prepare($sql);
+    $stmt->execute();
+    return $stmt;
 }
 
 function SearchUser($username)

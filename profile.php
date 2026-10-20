@@ -47,7 +47,7 @@ if (isset($_POST['submit'])) {
  
 
 //hämta info om användaren
-$row = getUser($_SESSION['username']);
+$row = getUsers();
 
 
 // Om användaren inte finns

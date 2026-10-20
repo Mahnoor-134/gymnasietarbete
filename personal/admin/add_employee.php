@@ -1,23 +1,15 @@
 <?php
-require_once 'assets/functions.php';
+require_once '../../assets/functions.php';
 
+/*
+$records = getUsers();
 
-$records=getUser($_SESSION['username'] );
-
-if($records->rowCount() > 0){
-    $row_Recordset1=$records->fetch(PDO::FETCH_ASSOC);
+if ($records->rowCount() > 0) {
+    $row_Recordset1 = $records->fetch(PDO::FETCH_ASSOC);
 }
 ?>
-
-<?php
-require_once 'assets/functions.php';
+<?php*/
 session_start();
-
-// Kontrollera att endast inloggad admin har tillgång hit
-/*if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit();
-}*/
 
 $error = false;
 
@@ -48,8 +40,8 @@ if (isset($_POST['submit'])) {
             'username' => $username,
             'name' => $name,
             'email' => $email,
-          //  'password' => $hashed_password
-            'password' => $password // Skickas i klartext om addUser() sköter hashningen
+            'password' => $hashed_password
+            //'password' => $password // Skickas i klartext om addUser() sköter hashningen
 
         ];
 
@@ -59,7 +51,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['email'] = $email;
             // $_SESSION['password'] = $password;
 
-            header("Location: hemsidan.php");
+            // header("Location: ../../index_admin.php");
             exit();
         } else {
             $error = true;
@@ -68,6 +60,8 @@ if (isset($_POST['submit'])) {
         $error = true;
     }
 }
+// Hämta användarna från databasen
+$records = getUsers();
 
 ?>
 
@@ -78,11 +72,11 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add employee</title>
+    <title>USERS</title>
 </head>
 
 <body>
-
+    <h1>Add Employee</h1>
     <?php
     if ($error)
         echo "<p>Kontrollera din uppgifter</p>";
@@ -101,12 +95,49 @@ if (isset($_POST['submit'])) {
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
         <br>
-        <input type="submit" name="submit" value="login">
+        <input type="submit" name="submit" value="Add Employee">
     </form>
 
-    <p>
-        <a href="login.php">Har du redan ett konto</a>
-    </p>
+
+    <h3>List of Employees</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Password</th>
+            </tr>
+        </thead>
+
+        <ttbody>
+    <?php if ($records && $records->rowCount() > 0): ?>
+        <?php while ($row = $records->fetch(PDO::FETCH_ASSOC)): ?>
+            <tr>
+                <td>
+                    <?= htmlspecialchars($row['username'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                </td>
+
+                <td>
+                    <?= htmlspecialchars($row['name'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                </td>
+
+                <td>
+                    <?= htmlspecialchars($row['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                </td>
+
+                <td>••••••••</td>
+            </tr>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="4">Inga användare hittades.</td>
+        </tr>
+    <?php endif; ?>
+</tbody>
+
+    </table>
+
 
 </body>
 
