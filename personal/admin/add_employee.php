@@ -1,7 +1,27 @@
 <?php
 require_once 'assets/functions.php';
+
+
+$records=getUser($_SESSION['username'] );
+
+if($records->rowCount() > 0){
+    $row_Recordset1=$records->fetch(PDO::FETCH_ASSOC);
+}
+?>
+
+<?php
+require_once 'assets/functions.php';
 session_start();
+
+// Kontrollera att endast inloggad admin har tillgång hit
+/*if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}*/
+
 $error = false;
+
+
 
 if (isset($_POST['submit'])) {
     if (
@@ -28,7 +48,8 @@ if (isset($_POST['submit'])) {
             'username' => $username,
             'name' => $name,
             'email' => $email,
-            'password' => $hashed_password
+          //  'password' => $hashed_password
+            'password' => $password // Skickas i klartext om addUser() sköter hashningen
 
         ];
 
