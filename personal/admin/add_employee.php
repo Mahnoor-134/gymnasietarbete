@@ -73,6 +73,7 @@ $records = getUsers();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USERS</title>
+     <link rel="stylesheet" href="../../css/style.css">
 </head>
 
 <body>
@@ -126,7 +127,8 @@ $records = getUsers();
                     <?= htmlspecialchars($row['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>
                 </td>
 
-                <td>••••••••</td>
+                <!--<td>••••••••</td>-->
+                <td><?= htmlspecialchars($row['password'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>
