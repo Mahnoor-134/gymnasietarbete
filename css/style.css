@@ -6,39 +6,114 @@ html {
 }
 
 h1{
-    color: rgb(85, 14, 14);
-    font-size: 44px;
+  color: rgb(85, 14, 14);
+  font-size: 44px;
+  font-family: 'Times New Roman', Times, serif;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-/* Navigation som finns i toppen av webbsidan */
+
 .nav {
   display: flex;
-  overflow: hidden;
+  /*overflow: hidden;*/
+  flex-direction: row;
   list-style: none;
   margin: 0;
   padding: 0;
+  align-items: center;
+ 
+  background-color: rgb(53, 4, 11);
+
+}
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.nav li {
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .nav a {
   display: block;
-  text-align: center;
+  /*text-align: center;*/
   padding: 14px 16px;
   text-decoration: none;
   font-weight: bold;
-  text-decoration: none;
+  transition: color 0.3s ease;
   font-size: 1.1rem;
   margin: 5px;
   font-family: 'Times New Roman', Times, serif;
+  color: #fff;
 }
 
 .nav a:hover {
-  color: #032f30;
+  color: #f7fafa;
   text-decoration: underline;
 }
 
 
-.nav .active {
-  background-color: rgb(212, 235, 241);
-  color: rgb(30, 71, 77);
+/* Styla formuläret på add employee-sidan */
+
+.add-employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #4e0a0a;
+  border-radius: 5px;
+  background-color: #d8b7b773;
 }
 
+.form-container {
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.form-container h2 {
+    text-align: center;
+    color: rgb(53, 4, 11);
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.form-description {
+  font-size: 0.9rem;
+  color: #351212;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-family: 'Times New Roman', Times, serif; 
+}
+.btn {
+  display: inline-block;
+  padding: 8px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #3d0a0a;
+  border: none;
+  border-radius: 8px;
+  
+}

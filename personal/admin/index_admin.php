@@ -7,13 +7,11 @@
 </head>
 <body>
       <h1>Personal</h1>
-    <nav>
+    <nav class="nav">
         <ul>
-            <li><a href="index.php">Hem</a></li>
-            <li><a href="profile.php">Profil</a></li>
             <li><a href="logout.php">Logga ut</a></li>
             <li><a href="add_employee.php">add user</a></li>
-            <li><a href="edit_employee.php">edit user</a></li>
+            
         </ul>
     </nav>
     
