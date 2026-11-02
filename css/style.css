@@ -5,13 +5,17 @@ html {
   font-family: 'Times New Roman', Times, serif;
 }
 
-h1{
+h1 {
   color: rgb(85, 14, 14);
-  font-size: 44px;
+  font-size: 45px;
   font-family: 'Times New Roman', Times, serif;
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
+  text-align: center;
+  box-sizing: border-box;
+ 
+ 
 }
 
 
@@ -23,7 +27,7 @@ h1{
   margin: 0;
   padding: 0;
   align-items: center;
- 
+
   background-color: rgb(53, 4, 11);
 
 }
@@ -73,19 +77,19 @@ ul {
 }
 
 .form-container {
-    max-width: 450px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  max-width: 450px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
 .form-container h2 {
-    text-align: center;
-    color: rgb(53, 4, 11);
-    margin-bottom: 10px;
-    font-size: 28px;
+  text-align: center;
+  color: rgb(53, 4, 11);
+  margin-bottom: 10px;
+  font-size: 28px;
 }
 
 .form-group {
@@ -94,6 +98,7 @@ ul {
   align-items: center;
 
 }
+
 .form-description {
   font-size: 0.9rem;
   color: #351212;
@@ -101,8 +106,9 @@ ul {
   margin-bottom: 10px;
   text-align: center;
   font-size: 14px;
-  font-family: 'Times New Roman', Times, serif; 
+  font-family: 'Times New Roman', Times, serif;
 }
+
 .btn {
   display: inline-block;
   padding: 8px 8px;
@@ -115,5 +121,35 @@ ul {
   background-color: #3d0a0a;
   border: none;
   border-radius: 8px;
-  
+
+}
+/*
+table, td, th {
+  border: 1px solid;
+  padding: 10px;
+}*/
+
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #500404;
+  color: white;
 }
