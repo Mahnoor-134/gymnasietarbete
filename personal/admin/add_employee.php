@@ -84,7 +84,6 @@ $records = getUsers();
             <li><a href="logout.php">Log out</a></li>
         </ul>
     </nav>
-    </nav>
 
 
 <div class="form_container">
@@ -129,10 +128,12 @@ $records = getUsers();
                 <th>Name</th>
                 <th>Email</th>
                 <th>Password</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
         </thead>
 
-        <ttbody>
+        <tbody>
             <?php if ($records && $records->rowCount() > 0): ?>
                 <?php while ($row = $records->fetch(PDO::FETCH_ASSOC)): ?>
                     <tr>
@@ -148,8 +149,12 @@ $records = getUsers();
                             <?= htmlspecialchars($row['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>
                         </td>
 
-                        <!--<td>••••••••</td>-->
-                        <td><?= htmlspecialchars($row['password'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+                        <td>••••••••</td>
+                       <!-- <td><?= htmlspecialchars($row['password'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>-->
+
+                       <td><a href="edit_employee.php?username=<?= urlencode($row['username']) ?>">Edit</a></td>
+                       <td><a href="delete_employee.php?username=<?= urlencode($row['username']) ?>" 
+                       onclick="return confirm('Are you sure you want to delete this employee?')">Delete</a></td>
                     </tr>
                 <?php endwhile; ?>
             <?php else: ?>
