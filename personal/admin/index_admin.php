@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <title>Admin</title>
 </head>
+
 <body>
-      <h1>Personal</h1>
+    <h1>Admin</h1>
     <nav class="nav">
         <ul>
-            <li><a href="logout.php">Logga ut</a></li>
-            <li><a href="add_employee.php">add user</a></li>
+            <li><a href="logout.php">Log out</a></li>
+            <li><a href="add_employee.php">Add Employee</a></li>
+            <li><a href="employee.php">Employees</a></li>
+            <li><a href="cars.php">Cars</a></li>
+            <li><a href="customer.php">Customers</a></li>
             
+
+
         </ul>
     </nav>
-    
+
 </body>
+
 </html>

@@ -59,17 +59,19 @@ function editUser($felt)
     UPDATE users 
     SET name =:name,
         email=:email,
-        password=COALESCE(:password, password)
+        password=password
          Where username=:username";
 
         $stmt = $taxi->prepare($sql);
 
         $hashedPassword = password_hash($felt['password'], PASSWORD_DEFAULT);
 
-        $stmt->bindValue(':name', $felt['name']);
-        $stmt->bindValue(':email', $felt['email']);
+        //$stmt->bindValue(':name', $felt['name']);
+        //  $stmt->bindValue(':email', $felt['email']);
         $stmt->bindValue(':password', $hashedPassword);
-        $stmt->bindValue(':username', $felt['username']);
+        //  $stmt->bindValue(':username', $felt['username']);
+
+
     } else {
         $sql = "
     UPDATE users 
@@ -98,13 +100,24 @@ function editUser($felt)
   //  return $stmt->fetch(PDO::FETCH_ASSOC);
   return $stmt;
 }*/
+function deleteUser($username)
+{
+    global $taxi;
 
+    $sql = "DELETE FROM users WHERE username = :username";
+
+    $stmt = $taxi->prepare($sql);
+
+    $stmt->bindValue(':username', $username);
+
+    return $stmt->execute();
+}
 
 function getUsers()
 {
-     global $taxi;
+    global $taxi;
     $sql = "select * from users";
-   
+
     $stmt = $taxi->prepare($sql);
     $stmt->execute();
     return $stmt;
