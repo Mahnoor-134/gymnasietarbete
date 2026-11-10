@@ -18,12 +18,12 @@ if (!isset($_GET['username'])) {
     exit;
     }
 
-    $emailusername = $_GET['username'];
-    $records = getUser();
+   $emailusername = $_GET['username'] ?? $_POST['username'] ?? '';
+    $records = getUsers();
     $employee = null;
 
     while ($row = $records->fetch(PDO::FETCH_ASSOC)) {
-    if ($row['username'] === $username) {
+    if ($row['username'] === $emailusername) {
         $employee = $row;
         break;
     }
@@ -41,22 +41,21 @@ if (isset($_POST['submit'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
     $password = $_POST['password'];
 
-
-    if (!$name || !$email) {
+    if (!isset($name) || !isset($email)) {
+        $error = true;
         echo "Vänligen fyll i ett giltigt namn och en giltig e-postadress.";
     } else {
 
         $hashed_password = null;
         //om lösenord är tomt behålls det gamla
         if (!empty($password)) {
-            $password = $employee['password'];
-        } else {
-            $password = password_hash($password, PASSWORD_DEFAULT);
+            
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         }
 
 
     $felt = [
-        'username' => $_SESSION['username'],
+        'username' => $emailusername,
         'name' => $name,
         'email' => $email,
         'password' => $hashed_password
@@ -64,6 +63,10 @@ if (isset($_POST['submit'])) {
     ];
 
     if (editUser($felt)) {
+        $successMessage = "Profilen har uppdaterats!";
+            // Uppdatera $employee-arrayen så att formuläret visar de nya värdena direkt
+            $employee['name'] = $name;
+            $employee['email'] = $email;
         echo "profile uppdaterad";
     } else {
         $error = true;
@@ -78,8 +81,6 @@ if (isset($_POST['submit'])) {
 $row = getUsers();
 
 
-
-
 ?>
 
 
@@ -89,10 +90,11 @@ $row = getUsers();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>edit employee</title>
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
     
-<nav>
+<nav class="nav">
     
         <ul>
             <li><a href="index_admin.php">Home page</a></li>
@@ -103,17 +105,20 @@ $row = getUsers();
             <li><a href="customer.php">Customers</a></li>
         </ul>
     </nav>
-</nav>
+
+
+    <div class="form_container">
 
     <h1>Edit Employee</h1>
 
-    <div class="form_container">
 
          <?php if ($error): ?>
         <p>Please check your information.</p>
     <?php endif; ?>
 
-    <form method="post" action="">
+    <form method="post" action="" class="add-employee-form">
+
+    <input type="hidden" name="username" value="<?php echo htmlspecialchars($emailusername); ?>">
 
       <div class="form-group">
         <label for="name">Name:</label>
@@ -126,14 +131,17 @@ $row = getUsers();
         </div>
 
         <div class="form-group">
-        <label for="password">Password (leave blank to keep current password):</label>
+        <label for="password">Password:
+        <br>
+        <small>(leave blank to keep current password)</small>
+        </label>
         <input type="password" id="password" name="password"><br><br>
         </div>
 
-        <input type="submit" name="submit" value="Update">
+        <input  class="btn" type="submit" name="submit" value="Update">
     </form>
 
-    <a href="add_employee.php">Back to Employee List</a>
+    <a  class="btn_1" href="add_employee.php">Back to Employee List</a>
     </div>
     
 </body>

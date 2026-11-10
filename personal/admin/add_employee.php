@@ -50,6 +50,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['name'] = $name;
             $_SESSION['email'] = $email;
             // $_SESSION['password'] = $password;
+            header("Location: add_employee.php");
 
             // header("Location: ../../index_admin.php");
             exit();
@@ -205,3 +206,5 @@ if (isset($_GET['username'])) {
 </body>
 
 </html>
+
+

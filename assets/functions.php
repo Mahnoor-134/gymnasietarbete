@@ -59,17 +59,17 @@ function editUser($felt)
     UPDATE users 
     SET name =:name,
         email=:email,
-        password=password
+        password=:password
          Where username=:username";
 
         $stmt = $taxi->prepare($sql);
 
-        $hashedPassword = password_hash($felt['password'], PASSWORD_DEFAULT);
+       // $hashedPassword = password_hash($felt['password'], PASSWORD_DEFAULT);
 
-        //$stmt->bindValue(':name', $felt['name']);
-        //  $stmt->bindValue(':email', $felt['email']);
-        $stmt->bindValue(':password', $hashedPassword);
-        //  $stmt->bindValue(':username', $felt['username']);
+        $stmt->bindValue(':name', $felt['name']);
+        $stmt->bindValue(':email', $felt['email']);
+        $stmt->bindValue(':password', $felt['password']);
+        $stmt->bindValue(':username', $felt['username']);
 
 
     } else {

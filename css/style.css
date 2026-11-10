@@ -154,3 +154,18 @@ th {
   background-color: #500404;
   color: white;
 }
+
+.btn_1 {
+  display: block;
+  width: fit-content;
+  margin: 10px auto;
+  padding: 16px 8px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  color: #fff;
+  background-color: #3d0a0a;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+}
