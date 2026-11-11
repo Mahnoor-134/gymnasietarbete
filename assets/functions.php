@@ -36,10 +36,10 @@ function login($username, $password)
     $stmt = $taxi->prepare($sql);
     $stmt->bindValue(':username', $username, PDO::PARAM_STR);
     $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $users = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['password'])) {
-        return $user;
+    if ($users && password_verify($password, $users['password'])) {
+        return $users;
     } else {
         return false;
     }

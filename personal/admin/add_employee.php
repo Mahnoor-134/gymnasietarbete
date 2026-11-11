@@ -1,17 +1,14 @@
 <?php
 require_once '../../assets/functions.php';
 
-/*
-$records = getUsers();
-
-if ($records->rowCount() > 0) {
-    $row_Recordset1 = $records->fetch(PDO::FETCH_ASSOC);
-}
-?>
-<?php*/
 session_start();
 
 $error = false;
+//KONTROLLERA OM ANVÄNDAREN ÄR INLOGGAD
+if (!isset($_SESSION['username'])) {
+    header('Location: login_admin.php');
+    exit;
+}
 
 
 

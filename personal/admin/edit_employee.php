@@ -7,7 +7,7 @@ $error = false;
 
 //KONTROLLERA OM ANVÄNDAREN ÄR INLOGGAD
 if (!isset($_SESSION['username'])) {
-    header('Location: index.php');
+    header('Location: login_admin.php');
     exit;
 }
 
