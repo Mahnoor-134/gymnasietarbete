@@ -5,8 +5,8 @@ require_once 'config/db.php';
 function addUser($felt)
 {
     global $taxi;
-    $sql = "INSERT INTO users(username, name, email, password) 
-    VALUES (:username, :name, :email, :password)";
+    $sql = "INSERT INTO users(username, name, email, password, role) 
+    VALUES (:username, :name, :email, :password, :role)";
 
 
     $stmt = $taxi->prepare($sql);
@@ -17,6 +17,8 @@ function addUser($felt)
     $stmt->bindValue(':name', $felt['name']);
     $stmt->bindValue(':email', $felt['email']);
     $stmt->bindValue(':password', $felt['password']);
+    $stmt->bindValue(':role', $felt['role']);
+
 
     try {
         $stmt->execute();

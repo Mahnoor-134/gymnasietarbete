@@ -6,11 +6,9 @@ session_start();
 $error = false;
 //KONTROLLERA OM ANVÄNDAREN ÄR INLOGGAD
 if (!isset($_SESSION['username'])) {
-    header('Location: login_admin.php');
+    header('Location: login.php');
     exit;
 }
-
-
 
 if (isset($_POST['submit'])) {
     if (
@@ -18,6 +16,7 @@ if (isset($_POST['submit'])) {
         && isset($_POST['name'])
         && isset($_POST['email'])
         && isset($_POST['password'])
+        && isset($_POST['role'])
         && ($_POST["username"] != "")
         && ($_POST["name"] != "")
         && ($_POST["email"] != "")
@@ -30,32 +29,43 @@ if (isset($_POST['submit'])) {
         $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $password = $_POST['password'];
-
+        $role = $_POST['role'];
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         $_POST = [
             'username' => $username,
             'name' => $name,
             'email' => $email,
-            'password' => $hashed_password
+            'password' => $hashed_password,
+            'role' => $role
             //'password' => $password // Skickas i klartext om addUser() sköter hashningen
 
         ];
-
-        if (addUser($_POST)) {
-            $_SESSION['username'] = $username;
-            $_SESSION['name'] = $name;
-            $_SESSION['email'] = $email;
-            // $_SESSION['password'] = $password;
+        if (!in_array($role, ['Admin', 'Employee'], true)) {
+            $error = true;
+        } else if (addUser($_POST)) {
             header("Location: add_employee.php");
-
-            // header("Location: ../../index_admin.php");
             exit();
         } else {
             $error = true;
         }
-    } else {
-        $error = true;
+
+        //if (addUser($_POST)) {
+
+            // $_SESSION['username'] = $username;
+            //  $_SESSION['name'] = $name;
+            //  $_SESSION['email'] = $email;
+            // $_SESSION['password'] = $password;
+
+            //header("Location: add_employee.php");
+
+             // header("Location: ../../index_admin.php");
+            //  exit();
+           //} else {
+       //     $error = true;
+     //   }
+   // } else {
+      //  $error = true;
     }
 }
 // Hämta användarna från databasen
@@ -74,11 +84,10 @@ if (isset($_GET['username'])) {
 
         header("Location: add_employee.php");
         exit();
-    
-} else {
+    } else {
 
-   $error = true;
-}
+        $error = true;
+    }
 }
 ?>
 
@@ -86,7 +95,7 @@ if (isset($_GET['username'])) {
 
 //edit employee
 if (isset($_GET['username'])) {
-    $username = $_GET['username'];      
+    $username = $_GET['username'];
 }
 
 ?>
@@ -142,6 +151,13 @@ if (isset($_GET['username'])) {
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="Employee">Employee</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
 
             <input class="btn" type="submit" name="submit" value="Add Employee">
         </form>
@@ -156,6 +172,7 @@ if (isset($_GET['username'])) {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Password</th>
+                <th>Role</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -165,6 +182,8 @@ if (isset($_GET['username'])) {
             <?php if ($records && $records->rowCount() > 0): ?>
                 <?php while ($row = $records->fetch(PDO::FETCH_ASSOC)): ?>
                     <tr>
+
+
                         <td>
                             <?= htmlspecialchars($row['username'] ?? '', ENT_QUOTES, 'UTF-8') ?>
                         </td>
@@ -180,6 +199,9 @@ if (isset($_GET['username'])) {
                         <td>••••••••</td>
                         <!-- <td><?= htmlspecialchars($row['password'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>-->
 
+                        <td>
+                            <?= htmlspecialchars($row['role'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                        </td>
                         <td><a href="edit_employee.php?username=<?= urlencode($row['username']) ?>">Edit</a></td>
                         <?php
 
@@ -203,5 +225,3 @@ if (isset($_GET['username'])) {
 </body>
 
 </html>
-
-
