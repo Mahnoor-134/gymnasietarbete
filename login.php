@@ -30,15 +30,17 @@ $user = login($username, $password);
         $_SESSION['role'] = $user['role'];
 
         if ($user['role'] === 'Admin') {
-            header('Location: index_admin.php');
+            header('Location: ../../index_admin.php');
             exit();
 
         } else if ($user['role'] === 'Employee') {
-            header('Location: index_employee.php');
+            header('Location: ../../index_employee.php');
             exit();
-        }  else {
+        }
+     }
+          else {
         $error = 'Invalid username or password!';
-    }
+    
  }
 }
 ?>
