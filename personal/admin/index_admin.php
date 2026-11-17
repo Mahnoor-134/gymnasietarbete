@@ -20,11 +20,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
     <h1>Admin</h1>
     <nav class="nav">
         <ul>
-            <li><a href="../../logout.php">Log out</a></li>
-            <li><a href="../../add_employee.php">Add Employee</a></li>
-            <li><a href="../../employee.php">Employees</a></li>
-            <li><a href="../../cars.php">Cars</a></li>
-            <li><a href="../../customer.php">Customers</a></li>
+            <li><a href="logout.php">Log out</a></li>
+            <li><a href="add_employee.php">Add Employee</a></li>
+            <li><a href="employee.php">Employees</a></li>
+            <li><a href="cars.php">Cars</a></li>
+            <li><a href="customer.php">Customers</a></li>
             
 
 

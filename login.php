@@ -30,11 +30,11 @@ $user = login($username, $password);
         $_SESSION['role'] = $user['role'];
 
         if ($user['role'] === 'Admin') {
-            header('Location: ../../index_admin.php');
+            header('Location: personal/admin/index_admin.php');
             exit();
 
         } else if ($user['role'] === 'Employee') {
-            header('Location: ../../index_employee.php');
+            header('Location: personal/employee/index_employee.php');
             exit();
         }
      }
