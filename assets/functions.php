@@ -146,7 +146,7 @@ function SearchUser($username)
 function getCars()
 {
     global $taxi;
-    $sql = "SELECT * FROM cars";
+    $sql = "SELECT * FROM cars ORDER BY car_id ASC";
 
     $stmt = $taxi->prepare($sql);
     $stmt->execute();
@@ -155,30 +155,84 @@ function getCars()
 function addCar($car)
 {
     global $taxi;
-    $sql = "INSERT INTO cars(car_model, car_brand, car_year, car_color, meter_reading, number_of_rental_days, price_per_meter) 
-    VALUES (:car_model, :car_brand, :car_year, :car_color, :meter_reading, :number_of_rental_days, :price_per_meter)";
+    $sql = "INSERT INTO cars(car_model, car_brand, car_year, car_color, meter_reading, number_of_rental_days, price_per_day, included_km_per_day, extra_km_price) 
+    VALUES (:car_model, :car_brand, :car_year, :car_color, :meter_reading, :number_of_rental_days, :price_per_day, :included_km_per_day, :extra_km_price)";
 
     $stmt = $taxi->prepare($sql);
 
     $stmt->bindValue(':car_model', $car['car_model']);
     $stmt->bindValue(':car_brand', $car['car_brand']);
-    $stmt->bindValue(':car_year', $car['car_year']);
+    $stmt->bindValue(':car_year', $car['car_year'], PDO::PARAM_INT);
     $stmt->bindValue(':car_color', $car['car_color']);
-    $stmt->bindValue(':meter_reading', $car['meter_reading']);
-    $stmt->bindValue(':number_of_rental_days', $car['number_of_rental_days']);
-    $stmt->bindValue(':price_per_meter', $car['price_per_meter']);
+    $stmt->bindValue(':meter_reading', $car['meter_reading'], PDO::PARAM_INT);
+    $stmt->bindValue(':number_of_rental_days', $car['number_of_rental_days'], PDO::PARAM_INT);
+    $stmt->bindValue(':price_per_day', $car['price_per_day']);
+    $stmt->bindValue(':included_km_per_day', $car['included_km_per_day'], PDO::PARAM_INT);
+    $stmt->bindValue(':extra_km_price', $car['extra_km_price']);
 
     try {
         return $stmt->execute();
     } catch (PDOException $e) {
-        return false;
+        die("Database error in addCar: " . $e->getMessage());
     }
 }
+
 function deleteCar($car_id)
 {
     global $taxi;
-    $sql= "DELETE FROM cars WHERE car_id = :car_id";
+    $sql = "DELETE FROM cars WHERE car_id = :car_id";
     $stmt = $taxi->prepare($sql);
-    $stmt->bindValue(':car_id', $car_id);
+    $stmt->bindValue(':car_id', $car_id, PDO::PARAM_INT);
     return $stmt->execute();
-}           
+}
+
+function calculate_total_price($number_of_rental_days, $price_per_day, $included_km_per_day, $extra_km_price, $total_km_driven)
+{
+    $base_price = $number_of_rental_days * $price_per_day;
+    $extra_km = max(0, $total_km_driven - ($number_of_rental_days * $included_km_per_day));
+    $extra_km_cost = $extra_km * $extra_km_price;
+
+    return $base_price + $extra_km_cost;
+}
+
+function Get_car_by_id($car_id)
+{
+    global $taxi;
+    $sql = "SELECT * FROM cars WHERE car_id = :car_id";
+    $stmt = $taxi->prepare($sql);
+    $stmt->bindValue(':car_id', $car_id, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function edit_car($car)
+{
+    global $taxi;
+    $sql = "UPDATE cars 
+            SET car_model = :car_model,
+                car_brand = :car_brand,
+                car_year = :car_year,
+                car_color = :car_color,
+                meter_reading = :meter_reading,
+                number_of_rental_days = :number_of_rental_days,
+                price_per_day = :price_per_day,
+                included_km_per_day = :included_km_per_day,
+                extra_km_price = :extra_km_price
+            WHERE car_id = :car_id";
+
+    $stmt = $taxi->prepare($sql);
+
+    $stmt->bindValue(':car_model', $car['car_model']);
+    $stmt->bindValue(':car_brand', $car['car_brand']);
+    $stmt->bindValue(':car_year', $car['car_year'], PDO::PARAM_INT);
+    $stmt->bindValue(':car_color', $car['car_color']);
+    $stmt->bindValue(':meter_reading', $car['meter_reading'], PDO::PARAM_INT);
+    $stmt->bindValue(':number_of_rental_days', $car['number_of_rental_days'], PDO::PARAM_INT);
+    $stmt->bindValue(':price_per_day', $car['price_per_day']);
+    $stmt->bindValue(':included_km_per_day', $car['included_km_per_day'], PDO::PARAM_INT);
+    $stmt->bindValue(':extra_km_price', $car['extra_km_price']);
+    $stmt->bindValue(':car_id', $car['car_id'], PDO::PARAM_INT);
+
+    return ($stmt->execute());
+    
+}
