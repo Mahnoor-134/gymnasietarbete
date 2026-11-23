@@ -113,12 +113,19 @@ if (isset($_GET['username'])) {
 
 <body>
 
-    <nav class="nav">
-        <ul>
-            <li><a href="index_admin.php">home page</a></li>
-            <li><a href="logout.php">Log out</a></li>
+       <nav class="nav">
+        <ul class="nav-left">
+            <li><a href="add_employee.php">Add Employee</a></li>
+            <li><a href="employee.php">Employees</a></li>
+            <li><a href="car_admin.php">Cars</a></li>
+            <li><a href="customer.php">Customers</a></li>
+        </ul>
+
+        <ul class="nav-right">
+            <li><a href="../../logout.php">Log out</a></li>
         </ul>
     </nav>
+
 
 
     <div class="form_container">

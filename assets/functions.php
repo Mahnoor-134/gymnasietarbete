@@ -155,8 +155,8 @@ function getCars()
 function addCar($car)
 {
     global $taxi;
-    $sql = "INSERT INTO cars(car_model, car_brand, car_year, car_color, meter_reading, number_of_rental_days, price_per_day, included_km_per_day, extra_km_price) 
-    VALUES (:car_model, :car_brand, :car_year, :car_color, :meter_reading, :number_of_rental_days, :price_per_day, :included_km_per_day, :extra_km_price)";
+    $sql = "INSERT INTO cars(car_model, car_brand, car_year, car_color, meter_reading, number_of_rental_days, price_per_day, included_km_per_day, extra_km_price, image) 
+    VALUES (:car_model, :car_brand, :car_year, :car_color, :meter_reading, :number_of_rental_days, :price_per_day, :included_km_per_day, :extra_km_price, :image)";
 
     $stmt = $taxi->prepare($sql);
 
@@ -169,6 +169,7 @@ function addCar($car)
     $stmt->bindValue(':price_per_day', $car['price_per_day']);
     $stmt->bindValue(':included_km_per_day', $car['included_km_per_day'], PDO::PARAM_INT);
     $stmt->bindValue(':extra_km_price', $car['extra_km_price']);
+    $stmt->bindValue(':image', $car['image']);
 
     try {
         return $stmt->execute();
@@ -208,6 +209,7 @@ function Get_car_by_id($car_id)
 function edit_car($car)
 {
     global $taxi;
+    $imageSQL = !empty($car['image']) ? ", image = :image" : "";
     $sql = "UPDATE cars 
             SET car_model = :car_model,
                 car_brand = :car_brand,
@@ -218,6 +220,8 @@ function edit_car($car)
                 price_per_day = :price_per_day,
                 included_km_per_day = :included_km_per_day,
                 extra_km_price = :extra_km_price
+                $imageSQL
+
             WHERE car_id = :car_id";
 
     $stmt = $taxi->prepare($sql);
@@ -233,6 +237,9 @@ function edit_car($car)
     $stmt->bindValue(':extra_km_price', $car['extra_km_price']);
     $stmt->bindValue(':car_id', $car['car_id'], PDO::PARAM_INT);
 
+    if (!empty($car['image'])) {
+        $stmt->bindValue(':image', $car['image']);
+    }
     return ($stmt->execute());
     
 }

@@ -17,21 +17,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
 </head>
 
 <body>
-    <h1>Admin</h1>
+
     <nav class="nav">
-        <ul>
-            <li><a href="../../logout.php">Log out</a></li>
+        <ul class="nav-left">
             <li><a href="add_employee.php">Add Employee</a></li>
             <li><a href="employee.php">Employees</a></li>
             <li><a href="car_admin.php">Cars</a></li>
             <li><a href="customer.php">Customers</a></li>
-            
+        </ul>
 
-
+        <ul class="nav-right">
+            <li><a href="../../logout.php">Log out</a></li>
         </ul>
     </nav>
 
+    <h1>Admin</h1>
 </body>
 
 </html>
-
