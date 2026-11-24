@@ -2,10 +2,32 @@
 session_start();
 require_once '../../assets/functions.php';
 
+echo "<pre>";
+
+echo "REQUEST METHOD: ";
+var_dump($_SERVER['REQUEST_METHOD']);
+
+echo "CONTENT TYPE: ";
+var_dump($_SERVER['CONTENT_TYPE'] ?? null);
+
+echo "CONTENT LENGTH: ";
+var_dump($_SERVER['CONTENT_LENGTH'] ?? null);
+
+echo "POST DATA: ";
+var_dump($_POST);
+
+echo "FILES DATA: ";
+var_dump($_FILES);
+
+echo "</pre>";
+
+
+
+
 // Only admin can access this page
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-    header('Location: ../../login.php');
-    exit();
+//    header('Location: ../../login.php');
+//    exit();
 }
 
 // Handle form submission
@@ -14,9 +36,12 @@ $image_name = null;
 
 
 
-
 // Image upload handling
 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+        die("Uppladdningsfel, felkod: " . $_FILES['image']['error']);
+    }   
+
     $allowedTypes = [
         'image/jpeg' => '.jpg',
         'image/png' => '.png',
@@ -25,7 +50,11 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
     ];
 
     $file_type = mime_content_type($_FILES['image']['tmp_name']);
-
+echo '<pre>';
+var_dump($_SERVER['REQUEST_METHOD']);
+var_dump($_POST);
+var_dump($_FILES);
+echo '</pre>';
     if (isset($allowedTypes[$file_type])) {
         $upload_dir = __DIR__ . '/../../uploads/';
 
@@ -91,7 +120,11 @@ if (isset($_GET['status'])) {
         $message = "Car added successfully!";
     } elseif ($_GET['status'] === 'deleted') {
         $message = "Car deleted successfully!";
-    }
+    }echo '<pre>';
+var_dump($_SERVER['REQUEST_METHOD']);
+var_dump($_POST);
+var_dump($_FILES);
+echo '</pre>';
 }
 
 if (isset($_POST['edit_car'])) {
@@ -117,7 +150,7 @@ if (isset($_POST['edit_car'])) {
     }
 }
 
-$car_to_edit = null;
+$car_to_edit = false;
 if (isset($_GET['edit_id'])) {
     $edit_id = filter_input(INPUT_GET, 'edit_id', FILTER_VALIDATE_INT);
     if ($edit_id) {
@@ -154,7 +187,11 @@ $cars = getCars();
         <ul class="nav-right">
             <li><a href="../../logout.php">Log out</a></li>
         </ul>
-    </nav>
+    </nav>echo '<pre>';
+var_dump($_SERVER['REQUEST_METHOD']);
+var_dump($_POST);
+var_dump($_FILES);
+echo '</pre>';
 
 
     <?php if ($message): ?>
@@ -164,7 +201,7 @@ $cars = getCars();
     <?php if ($car_to_edit): ?>
         <div class="form_container">
             <h1>Edit Car</h1>
-            <form action="" method="post" enctype="multipart/form-data" class="add-employee-form">
+            <form action="car_admin.php" method="post" enctype="multipart/form-data" class="add-employee-form">
                 <input type="hidden" name="car_id" value="<?= htmlspecialchars($car_to_edit['car_id'], ENT_QUOTES, 'UTF-8') ?>">
 
                 <label for="car_model">Car Model:</label>
@@ -175,7 +212,11 @@ $cars = getCars();
 
                 <label for="car_year">Car Year:</label>
                 <input type="number" id="car_year" name="car_year" value="<?= htmlspecialchars($car_to_edit['car_year'], ENT_QUOTES, 'UTF-8') ?>" required>
-
+echo '<pre>';
+var_dump($_SERVER['REQUEST_METHOD']);
+var_dump($_POST);
+var_dump($_FILES);
+echo '</pre>';
                 <label for="car_color">Car Color:</label>
                 <input type="text" id="car_color" name="car_color" value="<?= htmlspecialchars($car_to_edit['car_color'], ENT_QUOTES, 'UTF-8') ?>" required>
 
@@ -207,7 +248,7 @@ $cars = getCars();
 
         <div class="form_container">
             <h1>Add Cars</h1>
-            <form action="" method="post" enctype="multipart/form-data" class="add-employee-form">
+            <form action="car_admin.php" method="post" enctype="multipart/form-data" class="add-employee-form">
 
                 <p class="form-description">Fill in the details below to add a new car.</p>
                 <label for="car_model">Car Model:</label>
