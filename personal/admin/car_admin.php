@@ -1,33 +1,13 @@
 <?php
+
+//echo "Laddad php.ini: " . php_ini_loaded_file() . " | upload_max: " . ini_get('upload_max_filesize') . " | post_max: " . ini_get('post_max_size') . " | file_uploads: " . ini_get('file_uploads');
 session_start();
 require_once '../../assets/functions.php';
 
-echo "<pre>";
-
-echo "REQUEST METHOD: ";
-var_dump($_SERVER['REQUEST_METHOD']);
-
-echo "CONTENT TYPE: ";
-var_dump($_SERVER['CONTENT_TYPE'] ?? null);
-
-echo "CONTENT LENGTH: ";
-var_dump($_SERVER['CONTENT_LENGTH'] ?? null);
-
-echo "POST DATA: ";
-var_dump($_POST);
-
-echo "FILES DATA: ";
-var_dump($_FILES);
-
-echo "</pre>";
-
-
-
-
 // Only admin can access this page
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-//    header('Location: ../../login.php');
-//    exit();
+    //    header('Location: ../../login.php');
+    //    exit();
 }
 
 // Handle form submission
@@ -37,51 +17,58 @@ $image_name = null;
 
 
 // Image upload handling
-if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
     if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-        die("Uppladdningsfel, felkod: " . $_FILES['image']['error']);
-    }   
-
-    $allowedTypes = [
-        'image/jpeg' => '.jpg',
-        'image/png' => '.png',
-        'image/gif' => '.gif',
-        'image/webp' => '.webp'
-    ];
-
-    $file_type = mime_content_type($_FILES['image']['tmp_name']);
-echo '<pre>';
-var_dump($_SERVER['REQUEST_METHOD']);
-var_dump($_POST);
-var_dump($_FILES);
-echo '</pre>';
-    if (isset($allowedTypes[$file_type])) {
-        $upload_dir = __DIR__ . '/../../uploads/';
-
-        
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
-
-        // Check folder permissions
-        if (!is_writable($upload_dir)) {
-            die("Upload folder is not writable: " . $upload_dir);
-        }
-
-        $extension = $allowedTypes[$file_type];
-        $image_name = uniqid('car_', true) . $extension;
-        $uploadPath = $upload_dir . $image_name;
-
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath)) {
-            echo "Image uploaded successfully." . $image_name;
-        } else {
-            echo "Failed to upload image." . $image_name;
-            $image_name = null;
-        }
+        $message = "Uppladdningsfel, felkod: " . $_FILES['image']['error'];
     } else {
-        $message = "Invalid image type. Only JPG, PNG, GIF, and WEBP are allowed.";
+        $allowedTypes = [
+            'image/jpeg' => '.jpg',
+            'image/png'  => '.png',
+            'image/gif'  => '.gif',
+            'image/webp' => '.webp'
+        ];
+
+        $file_type = mime_content_type($_FILES['image']['tmp_name']);
+
+        if (isset($allowedTypes[$file_type])) {
+            $upload_dir = __DIR__ . '/../../uploads/';
+
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+
+            if (is_writable($upload_dir)) {
+                $extension = $allowedTypes[$file_type];
+                $image_name = uniqid('car_', true) . $extension;
+                $uploadPath = $upload_dir . $image_name;
+
+                if (!move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath)) {
+                    $message = "Failed to upload image.";
+                    $image_name = null;
+                }
+            } else {
+                $message = "Upload folder is not writable!";
+            }
+        } else {
+            $message = "Invalid image type. Only JPG, PNG, GIF, and WEBP are allowed.";
+        }
     }
 }
+
+
+
+// if (!isset($allowedTypes[$file_type])) {
+//       die("Invalid image type!");
+//  }
+
+
+//echo '<pre>';
+//var_dump($_SERVER['REQUEST_METHOD']);
+//var_dump($_POST);
+//var_dump($_FILES);
+//echo '</pre>';
+
+
 
 //deleting a car
 if (isset($_GET['delete_car'])) {
@@ -93,6 +80,7 @@ if (isset($_GET['delete_car'])) {
     }
 }
 
+//adding a car
 if (isset($_POST['add_car'])) {
     $carData = [
         'car_model'             => trim($_POST['car_model'] ?? ''),
@@ -115,20 +103,15 @@ if (isset($_POST['add_car'])) {
     }
 }
 
-if (isset($_GET['status'])) {
-    if ($_GET['status'] === 'success') {
-        $message = "Car added successfully!";
-    } elseif ($_GET['status'] === 'deleted') {
-        $message = "Car deleted successfully!";
-    }echo '<pre>';
-var_dump($_SERVER['REQUEST_METHOD']);
-var_dump($_POST);
-var_dump($_FILES);
-echo '</pre>';
-}
+
+//editing a car
 
 if (isset($_POST['edit_car'])) {
     $car_id = filter_input(INPUT_POST, 'car_id', FILTER_VALIDATE_INT);
+    $existing_car = Get_car_by_id($car_id);
+    $final_image = $image_name !== null ? $image_name : ($existing_car['image'] ?? null);
+
+
     $carData = [
         'car_id'                 => filter_input(INPUT_POST, 'car_id', FILTER_VALIDATE_INT),
         'car_model'              => trim($_POST['car_model'] ?? ''),
@@ -140,13 +123,21 @@ if (isset($_POST['edit_car'])) {
         'price_per_day'          => $_POST['price_per_day'] ?? 0,
         'included_km_per_day'    => filter_input(INPUT_POST, 'included_km_per_day', FILTER_VALIDATE_INT),
         'extra_km_price'         => $_POST['extra_km_price'] ?? 0,
-        'image'                  => $image_name
+        'image'                  => $final_image
     ];
 
     if (edit_car($carData)) {
         $message = "Car updated successfully!";
     } else {
         $message = "Failed to update car.";
+    }
+}
+
+if (isset($_GET['status'])) {
+    if ($_GET['status'] === 'success') {
+        $message = "Car added successfully!";
+    } elseif ($_GET['status'] === 'deleted') {
+        $message = "Car deleted successfully!";
     }
 }
 
@@ -187,11 +178,7 @@ $cars = getCars();
         <ul class="nav-right">
             <li><a href="../../logout.php">Log out</a></li>
         </ul>
-    </nav>echo '<pre>';
-var_dump($_SERVER['REQUEST_METHOD']);
-var_dump($_POST);
-var_dump($_FILES);
-echo '</pre>';
+    </nav>
 
 
     <?php if ($message): ?>
@@ -212,11 +199,7 @@ echo '</pre>';
 
                 <label for="car_year">Car Year:</label>
                 <input type="number" id="car_year" name="car_year" value="<?= htmlspecialchars($car_to_edit['car_year'], ENT_QUOTES, 'UTF-8') ?>" required>
-echo '<pre>';
-var_dump($_SERVER['REQUEST_METHOD']);
-var_dump($_POST);
-var_dump($_FILES);
-echo '</pre>';
+
                 <label for="car_color">Car Color:</label>
                 <input type="text" id="car_color" name="car_color" value="<?= htmlspecialchars($car_to_edit['car_color'], ENT_QUOTES, 'UTF-8') ?>" required>
 
@@ -330,10 +313,20 @@ echo '</pre>';
             echo "<td>" . htmlspecialchars($row['included_km_per_day']) . "</td>";
             echo "<td>" . htmlspecialchars($row['extra_km_price']) . "</td>";
             echo "<td>" . number_format($base_cost, 2) . " SEK</td>";
+
             if (!empty($row['image'])) {
-                echo "<td><img src='../../uploads/" . 
-                htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8') . 
-                "' alt='Car Image' style='width:100px; height:auto;'></td>";
+
+                $image_path = '../../uploads/' . $row['image'];
+                echo "<td><img src='" . htmlspecialchars($image_path, ENT_QUOTES, 'UTF-8')
+                    . "' alt='Car Image' 
+              style='width:100px; height:auto;'>
+              </td>";
+
+
+
+                // echo "<td><img src='../../uploads/" . 
+                //htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8') . 
+                //"' alt='Car Image' style='width:100px; height:auto;'></td>";
             } else {
                 echo "<td>No image</td>";
             }
